@@ -20,3 +20,6 @@
 .idea/
 .DS_Store
 node_modules/
+
+# Generated Symfony skeleton (see README §1) — regenerate locally, never commit
+/folkmanager-skeleton/
