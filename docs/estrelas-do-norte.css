@@ -1,0 +1,589 @@
+/* =====================================================================
+   ESTRELAS DO NORTE — feuille de style unique pour la passation Symfony
+   -----------------------------------------------------------------------
+   À placer dans : assets/styles/app.css (AssetMapper) ou assets/app.css
+   (Webpack Encore), puis importée dans base.html.twig :
+
+     AssetMapper : {{ importmap('app') }} + import './styles/app.css' en tête de assets/app.js
+     Webpack Encore : {{ encore_entry_link_tags('app') }} avec app.js qui fait
+                       import './styles/app.css';
+
+   Sommaire :
+     1. Polices & variables (design tokens)
+     2. Reset / base
+     3. Layout général
+     4. En-tête & badge
+     5. Onglets (tabs)
+     6. Sections & cartes
+     7. Formulaires
+     8. Boutons
+     9. Membres (paires, lignes, badges de groupe)
+     10. Événements
+     11. Présences (pastilles de statut)
+     12. Utilitaires & accessibilité
+   ===================================================================== */
+
+
+/* ---------------------------------------------------------------------
+   1. POLICES & VARIABLES
+   --------------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Couleurs — dérivées du badge officiel (noir/argent) et de la fresque du flyer */
+  --edn-night: #141414;       /* fond du bandeau / éléments sombres */
+  --edn-night-soft: #242424;  /* onglets inactifs */
+  --edn-gold: #C99A3E;        /* accent, boutons d'action */
+  --edn-paper: #F2EDE1;       /* fond de page, texte clair sur fond sombre */
+  --edn-ink: #1C1A17;         /* texte principal */
+  --edn-ink-05: rgba(28, 26, 23, 0.05);
+  --edn-ink-08: rgba(28, 26, 23, 0.08);
+  --edn-ink-11: rgba(28, 26, 23, 0.11);
+  --edn-ink-14: rgba(28, 26, 23, 0.14);
+  --edn-ink-20: rgba(28, 26, 23, 0.20);
+  --edn-ink-33: rgba(28, 26, 23, 0.33);
+  --edn-ink-40: rgba(28, 26, 23, 0.40);
+  --edn-ink-66: rgba(28, 26, 23, 0.66);
+  --edn-ink-99: rgba(28, 26, 23, 0.60);
+  --edn-paper-66: rgba(242, 237, 225, 0.40);
+  --edn-paper-88: rgba(242, 237, 225, 0.55);
+
+  /* Couleurs de groupe — tons de la fresque du flyer officiel */
+  --edn-danseur: #AD4A2E;   /* terracotta / brique */
+  --edn-choriste: #4B5D3A; /* vert olive */
+  --edn-musicien: #3E7284; /* bleu poussière */
+
+  /* Typographie */
+  --edn-font-display: 'Fraunces', Georgia, serif;
+  --edn-font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Rayons & espacements */
+  --edn-radius-sm: 6px;
+  --edn-radius-md: 8px;
+  --edn-radius-lg: 10px;
+  --edn-radius-full: 999px;
+  --edn-max-width: 640px; /* équivalent max-w-2xl */
+}
+
+/* ---------------------------------------------------------------------
+   2. RESET / BASE
+   --------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--edn-paper);
+  color: var(--edn-ink);
+  font-family: var(--edn-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-family: var(--edn-font-display);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--edn-ink);
+}
+
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+a { color: inherit; }
+
+/* Focus clavier toujours visible (accessibilité) */
+:focus-visible {
+  outline: 2px solid var(--edn-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+
+/* ---------------------------------------------------------------------
+   3. LAYOUT GÉNÉRAL
+   --------------------------------------------------------------------- */
+
+.edn-app {
+  min-height: 100vh;
+  background: var(--edn-paper);
+}
+
+.edn-container {
+  max-width: var(--edn-max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.edn-main {
+  padding-top: 20px;
+  padding-bottom: 64px;
+}
+
+.edn-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--edn-night);
+}
+.edn-loading .spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--edn-nightSoft, #333);
+  border-top-color: var(--edn-gold);
+  border-radius: 50%;
+  animation: edn-spin 0.8s linear infinite;
+}
+@keyframes edn-spin { to { transform: rotate(360deg); } }
+
+
+/* ---------------------------------------------------------------------
+   4. EN-TÊTE & BADGE
+   --------------------------------------------------------------------- */
+
+.edn-header {
+  background: var(--edn-night);
+  padding: 20px 16px 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.edn-header__row {
+  max-width: var(--edn-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.edn-header__title {
+  font-size: 1.5rem;
+  color: var(--edn-paper);
+  line-height: 1.15;
+}
+
+.edn-header__subtitle {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--edn-paper-88);
+  margin-top: 2px;
+}
+
+.edn-header__saving {
+  max-width: var(--edn-max-width);
+  margin: 0 auto;
+  font-size: 0.72rem;
+  color: var(--edn-paper-66);
+  height: 14px;
+  padding-top: 6px;
+}
+
+/* Badge circulaire (SVG inline dans le template Twig, cf. notes en pied de fichier) */
+.edn-badge {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+.edn-badge__ring-outer { fill: #000; stroke: var(--edn-gold); stroke-width: 1.5; }
+.edn-badge__ring-inner { fill: none; stroke: rgba(255,255,255,0.33); stroke-width: 0.75; }
+.edn-badge__arc-text { fill: var(--edn-paper); font-family: var(--edn-font-display); }
+.edn-badge__monogram { fill: var(--edn-gold); font-family: var(--edn-font-display); font-weight: 900; }
+
+
+/* ---------------------------------------------------------------------
+   5. ONGLETS (TABS)
+   --------------------------------------------------------------------- */
+
+.edn-tabs {
+  background: var(--edn-night);
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.edn-tabs__row {
+  max-width: var(--edn-max-width);
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+.edn-tab {
+  flex: 1;
+  font-family: var(--edn-font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 8px 0;
+  border: none;
+  border-top: 2px dashed transparent;
+  border-radius: 0 0 var(--edn-radius-sm) var(--edn-radius-sm);
+  background: var(--edn-night-soft);
+  color: var(--edn-paper-88);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.edn-tab.is-active {
+  background: var(--edn-paper);
+  color: var(--edn-night);
+  border-top-color: var(--edn-gold);
+}
+
+
+/* ---------------------------------------------------------------------
+   6. SECTIONS & CARTES
+   --------------------------------------------------------------------- */
+
+.edn-section { margin-bottom: 24px; }
+
+.edn-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.edn-section__title {
+  font-size: 1.125rem;
+}
+
+.edn-card {
+  background: #FFFFFF;
+  border: 1px solid var(--edn-ink-08);
+  border-radius: var(--edn-radius-lg);
+  padding: 16px;
+}
+
+.edn-card--tight { padding: 10px 14px; }
+.edn-card--row { padding: 11px 14px; }
+
+.edn-card + .edn-card { margin-top: 6px; }
+
+.edn-empty {
+  font-size: 0.875rem;
+  color: var(--edn-ink-99);
+}
+
+
+/* ---------------------------------------------------------------------
+   7. FORMULAIRES
+   --------------------------------------------------------------------- */
+
+.edn-field { margin-bottom: 14px; }
+
+.edn-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--edn-ink-99);
+  margin-bottom: 4px;
+}
+
+.edn-input,
+.edn-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--edn-ink-33);
+  border-radius: var(--edn-radius-sm);
+  background: #fff;
+  color: var(--edn-ink);
+}
+
+.edn-input:focus,
+.edn-select:focus { border-color: var(--edn-gold); }
+
+.edn-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.edn-role-block {
+  padding-left: 20px;
+  margin-top: 8px;
+  border-left: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.edn-role-block--danseur { border-left-color: rgba(173, 74, 46, 0.2); }
+.edn-role-block--choriste { border-left-color: rgba(75, 93, 58, 0.2); }
+.edn-role-block--musicien { border-left-color: rgba(62, 114, 132, 0.2); }
+
+/* boutons "toggle" façon segmented control (genre, type de jour, etc.) */
+.edn-toggle-group { display: flex; gap: 8px; }
+.edn-toggle {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: capitalize;
+  border: none;
+  border-radius: var(--edn-radius-sm);
+  background: var(--edn-ink-11);
+  color: var(--edn-ink-99);
+  cursor: pointer;
+}
+.edn-toggle.is-active--danseur { background: var(--edn-danseur); color: #fff; }
+.edn-toggle.is-active--night { background: var(--edn-night); color: var(--edn-paper); }
+
+.edn-instrument-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.edn-instrument-row .edn-select { flex: 1; }
+.edn-instrument-row .edn-input { width: 96px; }
+.edn-backup-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.edn-add-instrument {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--edn-musicien);
+  cursor: pointer;
+  text-align: left;
+}
+
+
+/* ---------------------------------------------------------------------
+   8. BOUTONS
+   --------------------------------------------------------------------- */
+
+.edn-btn {
+  border: none;
+  border-radius: var(--edn-radius-sm);
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.edn-btn-primary { background: var(--edn-night); color: var(--edn-paper); }
+.edn-btn-secondary { background: var(--edn-ink-11); color: var(--edn-ink-99); }
+
+.edn-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--edn-gold);
+  color: var(--edn-night);
+  border: none;
+  border-radius: var(--edn-radius-full);
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.edn-btn-row { display: flex; gap: 8px; padding-top: 4px; }
+.edn-btn-row .edn-btn-primary { flex: 1; }
+
+.edn-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(173, 74, 46, 0.6);
+  display: inline-flex;
+}
+
+
+/* ---------------------------------------------------------------------
+   9. MEMBRES — paires, lignes, badges de groupe
+   --------------------------------------------------------------------- */
+
+.edn-group-block { margin-bottom: 16px; }
+
+.edn-group-block__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 6px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.edn-group-block__head--danseur { color: var(--edn-danseur); }
+.edn-group-block__head--choriste { color: var(--edn-choriste); }
+.edn-group-block__head--musicien { color: var(--edn-musicien); }
+
+.edn-mini-label {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--edn-ink-66);
+  margin-bottom: 4px;
+}
+
+.edn-pair-card,
+.edn-member-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.edn-pair-card__names { font-size: 0.9rem; font-weight: 500; }
+.edn-pair-card__sep { color: var(--edn-ink-40); margin: 0 4px; }
+
+.edn-member-line__extra {
+  font-size: 0.75rem;
+  color: var(--edn-ink-99);
+  margin-left: 6px;
+}
+
+
+/* ---------------------------------------------------------------------
+   10. ÉVÉNEMENTS
+   --------------------------------------------------------------------- */
+
+.edn-event-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.edn-event-row__meta { display: flex; align-items: center; gap: 8px; }
+
+.edn-day-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.edn-day-badge--samedi { background: rgba(62, 114, 132, 0.13); color: var(--edn-musicien); }
+.edn-day-badge--dimanche { background: rgba(173, 74, 46, 0.13); color: var(--edn-danseur); }
+.edn-day-badge--autre { background: var(--edn-ink-11); color: var(--edn-ink-99); }
+
+.edn-event-row__type { font-weight: 700; }
+.edn-event-row__sub { font-size: 0.75rem; color: var(--edn-ink-99); margin-top: 2px; }
+
+.edn-past-events summary {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--edn-ink-99);
+  cursor: pointer;
+}
+.edn-past-events[open] .edn-card { opacity: 0.7; }
+
+
+/* ---------------------------------------------------------------------
+   11. PRÉSENCES — pastilles de statut
+   --------------------------------------------------------------------- */
+
+.edn-status-pill {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--edn-radius-sm);
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+}
+.edn-status-pill.is-me {
+  background: rgba(201, 154, 62, 0.13);
+  border-color: var(--edn-gold);
+}
+.edn-status-pill__name { font-size: 0.9rem; font-weight: 500; }
+
+.edn-status-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--edn-radius-full);
+  color: #fff;
+}
+.edn-status-badge--present { background: var(--edn-choriste); }
+.edn-status-badge--absent { background: var(--edn-danseur); }
+.edn-status-badge--unknown { background: var(--edn-ink-14); color: var(--edn-ink-99); }
+
+.edn-event-attendance__summary {
+  font-size: 0.75rem;
+  color: var(--edn-ink-99);
+  margin-top: 2px;
+}
+
+.edn-attendance-groups { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.edn-attendance-groups__label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.edn-hint {
+  font-size: 0.72rem;
+  color: var(--edn-ink-66);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 4px;
+}
+
+
+/* ---------------------------------------------------------------------
+   12. UTILITAIRES & RESPONSIVE
+   --------------------------------------------------------------------- */
+
+.edn-flex { display: flex; }
+.edn-flex-col { display: flex; flex-direction: column; }
+.edn-gap-1 { gap: 4px; }
+.edn-gap-2 { gap: 8px; }
+.edn-mt-1 { margin-top: 4px; }
+.edn-mt-2 { margin-top: 8px; }
+.edn-text-muted { color: var(--edn-ink-99); }
+.edn-text-xs { font-size: 0.75rem; }
+.edn-capitalize { text-transform: capitalize; }
+.edn-hidden { display: none; }
+
+@media (max-width: 420px) {
+  .edn-header__title { font-size: 1.3rem; }
+  .edn-badge { width: 46px; height: 46px; }
+  .edn-tab { font-size: 0.78rem; }
+}
+
+/* =====================================================================
+   NOTES POUR LE DÉVELOPPEUR SYMFONY
+   -----------------------------------------------------------------------
+   - Le badge circulaire (.edn-badge) était un <svg> inline dans le
+     composant React (texte arqué via <textPath>). À reproduire en SVG
+     inline dans le twig (ex. templates/_badge.html.twig) plutôt qu'en
+     image bitmap, pour rester net à toutes les résolutions.
+   - Les couleurs de statut (present/absent/unknown) et de groupe
+     (danseur/choriste/musicien) sont côté JS dans le prototype ; ici
+     elles sont matérialisées par des classes .edn-day-badge--*,
+     .edn-status-badge--*, .edn-group-block__head--* à poser sur les
+     éléments Twig selon la donnée (ex. {% if evenement.jour == 'samedi' %}).
+   - Toutes les valeurs numériques (paddings, tailles) reprennent celles
+     du prototype React/Tailwind à l'identique pour ne pas re-designer :
+     seule la technique change (classes utilitaires Tailwind → classes
+     CSS nommées BEM-like préfixées "edn-").
+   ===================================================================== */
